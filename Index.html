@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script>
+      // Function to search for a manager
+      function searchManager() {
+        var managerName = document.getElementById("managerName").value;
+        google.script.run.withSuccessHandler(displayManagerDetails).searchManager(managerName);
+      }
+
+      // Function to display manager details
+      function displayManagerDetails(managerDetails) {
+        if (managerDetails.length === 0) {
+          document.getElementById("managerDetails").innerHTML = "No manager found.";
+          return;
+        }
+
+        var html = '<h3>Manager Details</h3>';
+        html += '<p>Name: ' + managerDetails[0] + '</p>';
+        html += '<p>Gender: ' + managerDetails[1] + '</p>';
+        html += '<p>Age: ' + managerDetails[2] + '</p>';
+        html += '<p>Email: ' + managerDetails[3] + '</p>';
+        html += '<h3>Campaigns Held</h3>';
+
+        var campaigns = managerDetails[4].split(', ');
+        for (var i = 0; i < campaigns.length; i++) {
+          html += '<p><a href="javascript:void(0);" onclick="showCampaignDetails(\'' + campaigns[i] + '\');">' + campaigns[i] + '</a></p>';
+        }
+
+        document.getElementById("managerDetails").innerHTML = html;
+      }
+
+      // Function to show campaign details
+      function showCampaignDetails(campaignName) {
+        google.script.run.withSuccessHandler(displayCampaignDetails).getCampaignDetails(campaignName);
+      }
+
+      // Function to display campaign details
+      function displayCampaignDetails(campaignDetails) {
+        if (campaignDetails === null) {
+          document.getElementById("campaignDetails").innerHTML = "No details found for the selected campaign.";
+          return;
+        }
+
+        var html = '<h3>Campaign Details</h3>';
+        html += '<p>Campaign Name: ' + campaignDetails[0] + '</p>';
+        html += '<p>Start Date and Time: ' + campaignDetails[1] + '</p>';
+        html += '<p>End Date and Time: ' + campaignDetails[2] + '</p>';
+        html += '<p><a href="javascript:void(0);" onclick="showProductDetails(\'' + campaignDetails[3] + '\');">Product Name: ' + campaignDetails[3] + '</a></p>';
+        html += '<p>Discounted Price: ' + campaignDetails[4] + '</p>';
+        html += '<p>Stock Available: ' + campaignDetails[5] + '</p>';
+        html += '<p>Traffic: ' + campaignDetails[6] + '</p>';
+        html += '<p>Conversion Rate: ' + campaignDetails[7] + '</p>';
+        html += '<p>Budget Allocated: ' + campaignDetails[8] + '</p>';
+        html += '<p>Name of Manager: ' + campaignDetails[9] + '</p>';
+        html += '<p>Status: ' + campaignDetails[10] + '</p>';
+
+        document.getElementById("campaignDetails").innerHTML = html;
+      }
+
+      // Function to show product details
+      function showProductDetails(productName) {
+        google.script.run.withSuccessHandler(displayProductDetails).getProductDetails(productName);
+      }
+
+      // Function to display product details
+      function displayProductDetails(productDetails) {
+        if (productDetails === null) {
+          document.getElementById("productDetails").innerHTML = "No details found for the selected product.";
+          return;
+        }
+
+        var html = '<h3>Product Details</h3>';
+        html += '<p>Product ID: ' + productDetails[0] + '</p>';
+        html += '<p>Product Name: ' + productDetails[1] + '</p>';
+        html += '<p>Category: ' + productDetails[2] + '</p>';
+        html += '<p>Price: ' + productDetails[3] + '</p>';
+        html += '<p>Stock Available: ' + productDetails[4] + '</p>';
+        html += '<p>Picture: <img src="' + productDetails[5] + '" alt="Product Image" /></p>';
+
+        document.getElementById("productDetails").innerHTML = html;
+      }
+
+      // Function to search for a campaign
+      function searchCampaign() {
+        var campaignName = document.getElementById("campaignName").value;
+        google.script.run.withSuccessHandler(displayCampaignDetails).getCampaignDetails(campaignName);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Manager and Campaign Details</h1>
+    <p>Enter Manager Name:</p>
+    <input type="text" id="managerName">
+    <button onclick="searchManager()">Search</button>
+    <div id="managerDetails"></div>
+    
+    <h1>Search Campaign</h1>
+    <p>Enter Campaign Name:</p>
+    <input type="text" id="campaignName">
+    <button onclick="searchCampaign()">Search</button>
+    <div id="campaignDetails"></div>
+    <div id="productDetails"></div>
+  </body>
+</html>
